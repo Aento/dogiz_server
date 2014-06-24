@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+  <persistence-unit name="OurDogsServerV2PU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>doggizz.classes.Test</class>
+    <class>doggizz.classes.User</class>
+    <class>doggizz.classes.UserPass</class>
+    <class>doggizz.classes.Park</class>
+    <class>doggizz.classes.PointLocation</class>
+    <class>doggizz.sql.LoadingPointLocation</class>
+    <class>doggizz.classes.RatingUpdate</class>
+    <class>doggizz.classes.Message</class>
+    <class>doggizz.classes.Picture</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:sqlserver://localhost:1433;databaseName=Dogiz"/>
+      <property name="javax.persistence.jdbc.password" value="QWaszx12"/>
+      <property name="javax.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+      <property name="javax.persistence.jdbc.user" value="doggizz_server"/>
+    </properties>
+  </persistence-unit>
+</persistence>

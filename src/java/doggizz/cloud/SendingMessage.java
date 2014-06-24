@@ -1,0 +1,69 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package doggizz.cloud;
+
+import doggizz.classes.Gcm_id;
+import doggizz.sql.Gcm;
+import java.beans.PropertyVetoException;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.jivesoftware.smack.XMPPException;
+
+/**
+ *
+ * @author Stas
+ */
+public class SendingMessage {
+    public void SendingMessage(Long id)
+    {
+        //IPHONE - 1
+        //ANDROID - 2
+        
+        Gcm gcm = new Gcm();
+        
+        Gcm_id gcm_id = new Gcm_id();
+        try {
+            gcm_id = gcm.Load_Gcm(id);
+        } catch (SQLException ex) {
+            Logger.getLogger(SendingMessage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+            
+            
+        if(gcm_id.getOs_code()==2){
+            final String userName = "621192712917" + "@gcm.googleapis.com";
+            //final String userName = "621192712917@developer.gserviceaccount.com";
+            final String password = "AIzaSyC6DPs9chpI8wQC-rqm887JxrYjVp6CCzg";
+            SmackCcsClient ccsClient;
+            try {
+                ccsClient = new SmackCcsClient();
+            try {
+                ccsClient.connect(userName, password);
+            } 
+            catch (XMPPException e) 
+            {
+                System.out.println(e);
+                e.printStackTrace();
+            }
+
+        // String toRegId = "APA91bGxJ1JhjBlNFUzEUBLbM3XA13TM0icADE9IkjZ3RPqKzPeQiXyZdHDJdiugBACWyri8R64UiqZvbFoDQ5AD4fz3ENDyhpJRFdlXW1kQi8zZWkbt6bewliv3U9nW--_FpuoSEaADAh8ndVCbaa7K5QJ3jExbHQ";
+            String messageId = ccsClient.getRandomMessageId();
+            Map<String, String> payload = new HashMap<String, String>();
+            payload.put("action","1");
+            payload.put("EmbeddedMessageId", messageId+"test@#stas");
+            String collapseKey = "sample";
+            Long timeToLive = 10000L;
+            Boolean delayWhileIdle = true;
+            ccsClient.send(SmackCcsClient.createJsonMessage(gcm_id.getGcm_id(), messageId, payload, collapseKey,
+                timeToLive, delayWhileIdle));
+            } catch (PropertyVetoException ex) {
+                Logger.getLogger(SendingMessage.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+}
