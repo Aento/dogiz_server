@@ -118,9 +118,9 @@ public class LoadingUsers {
                 cstmt.setString(20, null);
             
             if(u.getDog_pic().getPicture().length()>1)
-                cstmt.setString(20, u.getDog_pic().getPicture());
+                cstmt.setString(21, u.getDog_pic().getPicture());
             else
-                cstmt.setString(20, null);
+                cstmt.setString(21, null);
             
             cstmt.execute();
             //up.setId(Long.valueOf(cstmt.getInt(1)));
