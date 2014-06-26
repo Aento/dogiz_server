@@ -13,6 +13,7 @@ public class TaggedUser {
     private long id;
     private long user_id;
     private long tagged_user_id;
+    private User user;
 
     public TaggedUser() {
         super();
@@ -47,4 +48,14 @@ public class TaggedUser {
     public void setTagged_user_id(long tagged_user_id) {
         this.tagged_user_id = tagged_user_id;
     }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+    
+    
 }

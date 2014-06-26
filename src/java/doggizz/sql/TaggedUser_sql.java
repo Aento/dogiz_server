@@ -5,12 +5,13 @@
 package doggizz.sql;
 
 import doggizz.classes.TaggedUser;
+import doggizz.classes.User;
 import doggizz.utils.Pool;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
@@ -73,10 +74,32 @@ public class TaggedUser_sql {
             
             while(rs.next())
             {
+                User u = new User();
                 TaggedUser tag = new TaggedUser();
                 tag.setId(rs.getLong(1));
                 tag.setUser_id(rs.getLong(2));
                 tag.setTagged_user_id(rs.getLong(3));
+                
+                u.setId(rs.getLong(4));
+                u.setOwner_name(rs.getString(5));
+                u.setEmail(rs.getString(6));
+                u.setOwner_gender(rs.getInt(7));
+                u.setOwner_pic_id(rs.getLong(8));
+                u.setDog_pic_id(rs.getLong(9));
+                u.setDog_name(rs.getString(10));
+                u.setDog_breed(rs.getInt(11));
+                u.setDog_birthdate(TimestampToCalendar(rs.getTimestamp(12)));
+                u.setDog_gender(rs.getInt(12));
+                u.setDw_status(rs.getInt(13));
+                u.setPhone(rs.getInt(14));
+                u.setPhone_second(rs.getInt(15));
+                u.setDw_details(rs.getString(16));
+                u.setDog_castrated(rs.getInt(17));
+                u.setVet_id(rs.getLong(18));
+                u.setFood_id(rs.getLong(20));
+                u.setOwner_surname(rs.getString(21));
+                u.setDw_active(rs.getInt(22));
+                
                 tagList.add(tag);
             }
         } catch (SQLException ex) {
@@ -89,4 +112,20 @@ public class TaggedUser_sql {
         return tagList;
    }
     
+    public static Calendar TimestampToCalendar(Timestamp date)
+    { 
+        DateFormat hours = new SimpleDateFormat( "HH" );
+        String hour = hours.format(date);
+        DateFormat minutes = new SimpleDateFormat( "mm" );
+        String minute = minutes.format(date);
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, c.YEAR);
+        cal.set(Calendar.MONTH, c.MONTH);
+        cal.set(Calendar.DATE, c.DATE);
+        cal.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hour));
+        cal.set(Calendar.MINUTE, Integer.valueOf(minute));
+        return cal;
+    }
 }
