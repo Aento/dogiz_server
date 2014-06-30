@@ -43,8 +43,23 @@ public class GeneralAction {
     public static final int UPLOAD_BOARD_MESSAGES = 27;
     public static final int UPLOAD_TOP_BOARD_MESSAGES = 28;
     public static final int UPLOAD_ACTIVE_POINT = 29;
+    /*
+    Uploading TaggedUser To Server:
+    Send:GeneralAction with TaggedUser Class.
+    Receieve:"OK" in respond Status.
+    */
     public static final int UPLOAD_TAGGED_USER = 30;
+    /*
+    Load TaggedUserList From Server:
+    Send:GeneralAction with ID.
+    Receieve:"OK" in respondStatus wrapped in GeneralAction.
+    */
     public static final int LOADING_ALL_TAGGED_USERS = 31;
+     /*
+    Remove TaggedUser From Server:
+    Send:GeneralAction with ID.
+    Receieve:"OK" in respondStatus wrapped in GeneralAction.
+    */
     public static final int REMOVE_TAGGED_USER = 32;
     public static final int UPLOAD_FAVORITE_PARK = 33;
     public static final int LOADING_ALL_FAVORITE_PARKS = 34;
