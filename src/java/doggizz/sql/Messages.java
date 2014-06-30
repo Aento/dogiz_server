@@ -92,13 +92,15 @@ public class Messages {
         try {
             
             Connection con = Pool.getConnection();
-            CallableStatement cstmt = con.prepareCall("{?=call sp_Send_Message (?,?,?,?)}");
+            CallableStatement cstmt = con.prepareCall("{?=call sp_Send_Message (?,?,?,?,?)}");
             cstmt.registerOutParameter(1, java.sql.Types.BIGINT);
             cstmt.setString(2, m.getMessage());
             java.sql.Timestamp timestamp = new java.sql.Timestamp(c.getTimeInMillis());
             cstmt.setTimestamp(3, timestamp);
             cstmt.setLong(4, m.getSender().getId() );
             cstmt.setLong(5, m.getReceiver().getId());
+            Long group_id = m.getGroup_id();
+            cstmt.setLong(6, group_id);
             try
             {
                 cstmt.execute();

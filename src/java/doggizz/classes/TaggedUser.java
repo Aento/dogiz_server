@@ -14,15 +14,18 @@ public class TaggedUser {
     private long user_id;
     private long tagged_user_id;
     private User user;
-
+    private ParkCheckIn checkin;
+    
     public TaggedUser() {
         super();
     }
 
-    public TaggedUser(long id, long user_id, long tagged_user_id) {
+    public TaggedUser(long id, long user_id, long tagged_user_id,User user,ParkCheckIn checkin) {
         this.id = id;
         this.user_id = user_id;
         this.tagged_user_id = tagged_user_id;
+        this.user = user;
+        this.checkin = checkin;
     }
 
     public long getId() {
@@ -55,6 +58,14 @@ public class TaggedUser {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public ParkCheckIn getCheckin() {
+        return checkin;
+    }
+
+    public void setCheckin(ParkCheckIn checkin) {
+        this.checkin = checkin;
     }
     
     
