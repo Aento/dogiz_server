@@ -4,6 +4,7 @@
  */
 package doggizz.sql;
 
+import doggizz.classes.ParkCheckIn;
 import doggizz.classes.TaggedUser;
 import doggizz.classes.User;
 import doggizz.utils.Pool;
@@ -76,6 +77,7 @@ public class TaggedUser_sql {
             {
                 User u = new User();
                 TaggedUser tag = new TaggedUser();
+                ParkCheckIn pch = new ParkCheckIn();
                 tag.setId(rs.getLong(1));
                 tag.setUser_id(rs.getLong(2));
                 tag.setTagged_user_id(rs.getLong(3));
@@ -99,7 +101,15 @@ public class TaggedUser_sql {
                 u.setFood_id(rs.getLong(20));
                 u.setOwner_surname(rs.getString(21));
                 u.setDw_active(rs.getInt(22));
-                
+                tag.setUser(u);
+                Long id = rs.getLong(23);
+                if(id!=null&&id!=0){
+                    pch.setId(id);
+                    pch.setPersonID(rs.getLong(24));
+                    pch.setParkID(rs.getLong(25));
+                    pch.setChecked_time(TimestampToCalendar(rs.getTimestamp(26)));
+                }
+                tag.setCheckin(pch);
                 tagList.add(tag);
             }
         } catch (SQLException ex) {
