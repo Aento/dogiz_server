@@ -162,4 +162,29 @@ public class LoadingUsers {
         }
         return id;
     }
+    public void UpdateUserNamePhone (User u){
+        Connection con = null;
+        CallableStatement cstmt = null;
+        try
+        {
+            con = Pool.getConnection();
+            cstmt = con.prepareCall("{call sp_Update_User_Name_Phone (?,?)}");
+            cstmt.setLong(1, u.getId());
+            cstmt.setString(2, u.getOwner_name());
+           // cstmt.setInt(12, u.getPhone());
+           
+            cstmt.execute();  
+            cstmt.close();
+            con.close();
+        }
+        catch(SQLException e)
+        {
+            System.out.println(e);
+        }finally {
+            try { cstmt.close(); } catch (Exception e) { /* ignored */ }
+            try { con.close(); } catch (Exception e) { /* ignored */ }
+        }
+        
+        
+    }
 }
