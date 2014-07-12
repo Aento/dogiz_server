@@ -29,6 +29,7 @@ public class GeneralAction {
     public static final int LOADING_ALL_NEW_MESSAGES = 13;
     public static final int SENDING_NEW_MESSAGE = 14;
     public static final int LOADING_ALL_MESSAGES = 15;
+    public static final int LOADING_CHECK_MESSAGES_GROUP_ID_COUNT = 40;
     public static final int UPLOAD_PICTURE = 16;
     public static final int LOAD_PICTURE = 17;
     public static final int SENDING_POINT = 18;
@@ -96,7 +97,7 @@ public class GeneralAction {
     private ArrayList<ParkCheckinTotal> parkCheckInTotalList;
     private ArrayList<Picture> pictureList;
 //    private ArrayList<Veterinarian> vetList;
-//    private ArrayList<Shop> shopList;
+    private ArrayList<Shop> shopList;
     private ArrayList<PointLocation> pointList;
     private ArrayList<ParkCheckIn> checkinList;
     private ArrayList<User> userList;
@@ -237,15 +238,15 @@ public class GeneralAction {
 //    public void setVetList(ArrayList<Veterinarian> vetList) {
 //        this.vetList = vetList;
 //    }
-//    
-//    public ArrayList<Shop> getShopList() {
-//            return shopList;
-//    }
-//
-//    public void setShopList(ArrayList<Shop> shopList) {
-//            this.shopList = shopList;
-//    }
-//    
+    
+    public ArrayList<Shop> getShopList() {
+            return shopList;
+    }
+
+    public void setShopList(ArrayList<Shop> shopList) {
+            this.shopList = shopList;
+    }
+    
     public ParkCheckIn getCheckin() {
             return checkin;
     }

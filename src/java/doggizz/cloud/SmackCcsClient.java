@@ -4,22 +4,9 @@
  */
 package doggizz.cloud;
 
+
 import java.beans.PropertyVetoException;
-import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
-import org.jivesoftware.smack.ConnectionListener;
-import org.jivesoftware.smack.PacketInterceptor;
-import org.jivesoftware.smack.PacketListener;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.filter.PacketTypeFilter;
-import org.jivesoftware.smack.packet.DefaultPacketExtension;
-import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.packet.Packet;
-import org.jivesoftware.smack.packet.PacketExtension;
-import org.jivesoftware.smack.provider.PacketExtensionProvider;
-import org.jivesoftware.smack.provider.ProviderManager;
-import org.jivesoftware.smack.util.StringUtils;
+import java.io.IOException;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
 import org.xmlpull.v1.XmlPullParser;
@@ -31,6 +18,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.net.ssl.SSLSocketFactory;
+import javax.security.sasl.SaslException;
+import org.jivesoftware.smack.*;
+import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
+import org.jivesoftware.smack.SmackException.NotConnectedException;
+import org.jivesoftware.smack.filter.PacketTypeFilter;
+import org.jivesoftware.smack.packet.DefaultPacketExtension;
+import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Packet;
+import org.jivesoftware.smack.packet.PacketExtension;
+import org.jivesoftware.smack.provider.PacketExtensionProvider;
+import org.jivesoftware.smack.provider.ProviderManager;
+import org.jivesoftware.smack.util.StringUtils;
+import org.jivesoftware.smack.util.XmlStringBuilder;
 /**
  * Sample Smack implementation of a client for GCM Cloud Connection Server.
  *
@@ -76,29 +76,29 @@ public class SmackCcsClient {
       return new Message() {
         // Must override toXML() because it includes a <body>
         @Override
-        public String toXML() {
-
-          StringBuilder buf = new StringBuilder();
-          buf.append("<message");
+        public XmlStringBuilder toXML() {
+          XmlStringBuilder xsb = new XmlStringBuilder();
+          //StringBuilder buf = new StringBuilder();
+          xsb.append("<message");
           if (getXmlns() != null) {
-            buf.append(" xmlns=\"").append(getXmlns()).append("\"");
+            xsb.append(" xmlns=\"").append(getXmlns()).append("\"");
           }
           if (getLanguage() != null) {
-            buf.append(" xml:lang=\"").append(getLanguage()).append("\"");
+            xsb.append(" xml:lang=\"").append(getLanguage()).append("\"");
           }
           if (getPacketID() != null) {
-            buf.append(" id=\"").append(getPacketID()).append("\"");
+            xsb.append(" id=\"").append(getPacketID()).append("\"");
           }
           if (getTo() != null) {
-            buf.append(" to=\"").append(StringUtils.escapeForXML(getTo())).append("\"");
+            xsb.append(" to=\"").append(StringUtils.escapeForXML(getTo())).append("\"");
           }
           if (getFrom() != null) {
-            buf.append(" from=\"").append(StringUtils.escapeForXML(getFrom())).append("\"");
+            xsb.append(" from=\"").append(StringUtils.escapeForXML(getFrom())).append("\"");
           }
-          buf.append(">");
-          buf.append(GcmPacketExtension.this.toXML());
-          buf.append("</message>");
-          return buf.toString();
+          xsb.append(">");
+          xsb.append(GcmPacketExtension.this.toXML());
+          xsb.append("</message>");
+          return xsb;
         }
       };
     }
@@ -108,7 +108,7 @@ public class SmackCcsClient {
     
       
     // Add GcmPacketExtension
-    ProviderManager.getInstance().addExtensionProvider(GCM_ELEMENT_NAME,
+    ProviderManager.addExtensionProvider(GCM_ELEMENT_NAME,
         GCM_NAMESPACE, new PacketExtensionProvider() {
 
       @Override
@@ -138,7 +138,11 @@ public class SmackCcsClient {
    */
   public void send(String jsonRequest) {
     Packet request = new GcmPacketExtension(jsonRequest).toPacket();
-    connection.sendPacket(request);
+        try {
+            connection.sendPacket(request);
+        } catch (NotConnectedException ex) {
+            Logger.getLogger(SmackCcsClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
   }
 
   /**
@@ -251,10 +255,77 @@ public class SmackCcsClient {
     config.setDebuggerEnabled(true);
 
     // -Dsmack.debugEnabled=true
-    XMPPConnection.DEBUG_ENABLED = true;
+    //XMPPConnection.DEBUG_ENABLED = true;
 
-    connection = new XMPPConnection(config);
-    connection.connect();
+    connection = new XMPPConnection(config) {
+
+            @Override
+            public String getUser() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public String getConnectionID() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public boolean isConnected() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public boolean isAuthenticated() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public boolean isAnonymous() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public boolean isSecureConnection() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            protected void sendPacketInternal(Packet packet) throws NotConnectedException {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public boolean isUsingCompression() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            protected void connectInternal() throws SmackException, IOException, XMPPException {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void login(String string, String string1, String string2) throws XMPPException, SmackException, SaslException, IOException {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void loginAnonymously() throws XMPPException, SmackException, SaslException, IOException {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            protected void shutdown() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        };
+        try {
+            connection.connect();
+        } catch (SmackException ex) {
+            Logger.getLogger(SmackCcsClient.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(SmackCcsClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     connection.addConnectionListener(new ConnectionListener() {
 
@@ -282,6 +353,16 @@ public class SmackCcsClient {
       public void connectionClosed() {
         logger.info("Connection closed.");
       }
+
+            @Override
+            public void connected(XMPPConnection connection) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void authenticated(XMPPConnection connection) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
     });
 
     // Handle incoming packets
@@ -337,8 +418,15 @@ public class SmackCcsClient {
         logger.log(Level.INFO, "Sent: {0}",  packet.toXML());
       }
     }, new PacketTypeFilter(Message.class));
-
-    connection.login(username, password);
+        try {
+            connection.login(username, password);
+        } catch (SmackException ex) {
+            Logger.getLogger(SmackCcsClient.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SaslException ex) {
+            Logger.getLogger(SmackCcsClient.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(SmackCcsClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
   }
 
   public static void main(String [] args) throws PropertyVetoException {

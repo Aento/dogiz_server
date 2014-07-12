@@ -37,6 +37,7 @@ public class AsyncRequestProcessor implements Runnable {
 	private int secs;
         HttpServletRequest request;
         HttpServletResponse response;
+        int opCode;
 	public AsyncRequestProcessor() {
 	}
 
@@ -51,6 +52,7 @@ public class AsyncRequestProcessor implements Runnable {
 	public void run() {
         try {
             processRequest(request,response);
+            System.out.println("Operation code: " + opCode);
             asyncContext.complete();
         } catch (ServletException ex) {
             Logger.getLogger(AsyncRequestProcessor.class.getName()).log(Level.SEVERE, null, ex);
@@ -79,6 +81,7 @@ public class AsyncRequestProcessor implements Runnable {
             Query personQuery;
             GeneralAction requestAction = getRequestObject(request);
             
+            opCode = requestAction.getOperationCode();
 
             if(requestAction==null)
             {
@@ -122,14 +125,14 @@ public class AsyncRequestProcessor implements Runnable {
                     {
                         try
                         {
-                            u.setId(sri.SendingRegistrationInfo(u));
+                            u = sri.SendingRegistrationInfo(u);
                             up.setPersonID(u.getId());
                             up.setId(sri.SendingRegistrationInfo(up));
                             sri = null;
-//                            if(requestAction.getId() != null){
-//                                Gcm gcm = new Gcm();
-//                                gcm.Registrate_Gcm(requestAction.getString(), requestAction.getId());
-//                            }
+                            if(requestAction.getId() != null){
+                                Gcm gcm = new Gcm();
+                                gcm.Registrate_Gcm(requestAction.getString(), u.getId(),requestAction.getId());
+                            }
                         }
                         finally
                         {
@@ -301,26 +304,26 @@ public class AsyncRequestProcessor implements Runnable {
                     }
                     break;
                 }
-//                    
-//                case GeneralAction.LOADING_ALL_CHECKIN:
-//                {
-//                    ArrayList<ParkCheckIn> checkInList = new ArrayList<ParkCheckIn>();
-//                    try
-//                    {
-//                        
-//                        LoadingCheckIn lci = new LoadingCheckIn();
-//                        checkInList = lci.LoadingAllCheckIn(requestAction.getId());
-//                        lci = null;
-//                    }
-//                    finally
-//                    {
-//                        responseObject.setCheckinList(checkInList);
-//                        responseObject.setResponseStatus("OK");
-//                        out.print(createServerResponse(responseObject));
-//                        checkInList = null;
-//                    }
-//                    break;
-//                }
+                    
+                case GeneralAction.LOADING_ALL_CHECKIN:
+                {
+                    ArrayList<ParkCheckIn> checkInList = new ArrayList<ParkCheckIn>();
+                    try
+                    {
+                        
+                        LoadingCheckIn lci = new LoadingCheckIn();
+                        checkInList = lci.LoadingAllCheckIn(requestAction.getId());
+                        lci = null;
+                    }
+                    finally
+                    {
+                        responseObject.setCheckinList(checkInList);
+                        responseObject.setResponseStatus("OK");
+                        out.print(createServerResponse(responseObject));
+                        checkInList = null;
+                    }
+                    break;
+                }
 //                    
 //                case GeneralAction.LOADING_CHECKIN:
 //                {
@@ -418,22 +421,27 @@ public class AsyncRequestProcessor implements Runnable {
 //                
                 case GeneralAction.SENDING_NEW_MESSAGE:
                 {
-                    long id = 0;
+                    Long id = null;
                     //long sender_id = requestAction.getId();
                     Messages msg = new Messages();
+                    Message m = new Message();
                     try
                     {
-                        id = msg.Sending_New_Message(requestAction.getMessage());     
+                        m = msg.Sending_New_Message(requestAction.getMessage());     
                         SendingMessage sm = new SendingMessage();
-                        if(id!=0)
+                        id = m.getId();
+                        if(id!=0&&id!=null)
                             sm.SendingMessage(requestAction.getMessage().getReceiver().getId());
                         sm = null;
                         msg = null;
                     }
                     finally
                     {
-                        responseObject.setId(id);
-                        responseObject.setResponseStatus("OK");
+                        responseObject.setMessage(m);
+                        if(id!=null&&id!=0)
+                            responseObject.setResponseStatus("OK");
+                        else
+                            responseObject.setResponseStatus("ERROR");  
                         out.print(createServerResponse(responseObject));
                     }
                     break;
@@ -457,6 +465,33 @@ public class AsyncRequestProcessor implements Runnable {
                     msgList = null;
                     break;
                 }
+                    
+                case GeneralAction.LOADING_CHECK_MESSAGES_GROUP_ID_COUNT:
+                {
+                    Long group_id = requestAction.getId();
+                    Long count = requestAction.getId2();
+                    ArrayList<Message> msgList = new ArrayList<Message>();
+                    try
+                    {
+                        Messages msg = new Messages();
+                        if(group_id!=null&&count!=null)
+                            msgList = msg.Check_Groip_Id_Count(group_id,count);
+                        msg = null;
+                    }
+                    finally
+                    {
+                        responseObject.setMessageList(msgList);
+                        if(group_id!=null&&count!=null)
+                            responseObject.setResponseStatus("OK");
+                        else 
+                            responseObject.setResponseStatus("ERROR");
+                        out.print(createServerResponse(responseObject));
+                    }
+                    msgList = null;
+                    break;
+                }  
+                    
+                    
                 case GeneralAction.UPLOAD_PICTURE:
                 {
                     long id = 0;

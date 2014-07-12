@@ -7,11 +7,15 @@ package doggizz.cloud;
 import doggizz.classes.Gcm_id;
 import doggizz.sql.Gcm;
 import java.beans.PropertyVetoException;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.security.sasl.SaslException;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPException;
 
 /**
@@ -43,7 +47,15 @@ public class SendingMessage {
             try {
                 ccsClient = new SmackCcsClient();
             try {
-                ccsClient.connect(userName, password);
+                    //try {
+                        ccsClient.connect(userName, password);
+                    //} catch (SmackException ex) {
+                        Logger.getLogger(SendingMessage.class.getName()).log(Level.SEVERE, null );
+                    //} catch (SaslException ex) 
+                        Logger.getLogger(SendingMessage.class.getName()).log(Level.SEVERE, null );
+                    //} catch (IOException ex) {
+                        Logger.getLogger(SendingMessage.class.getName()).log(Level.SEVERE, null);
+                    //}
             } 
             catch (XMPPException e) 
             {
@@ -61,6 +73,8 @@ public class SendingMessage {
             Boolean delayWhileIdle = true;
             ccsClient.send(SmackCcsClient.createJsonMessage(gcm_id.getGcm_id(), messageId, payload, collapseKey,
                 timeToLive, delayWhileIdle));
+            //} catch (NotConnectedException ex) {
+                //Logger.getLogger(SendingMessage.class.getName()).log(Level.SEVERE, null, ex);
             } catch (PropertyVetoException ex) {
                 Logger.getLogger(SendingMessage.class.getName()).log(Level.SEVERE, null, ex);
             }

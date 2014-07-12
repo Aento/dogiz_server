@@ -468,7 +468,7 @@ public class DoggizMain extends HttpServlet {
 
         ThreadPoolExecutor executor = (ThreadPoolExecutor) request
                         .getServletContext().getAttribute("executor");
-
+        //executor.execute(new AsyncRequestProcessor(asyncCtx,request,response));
     }
 
     /**
@@ -493,7 +493,6 @@ public class DoggizMain extends HttpServlet {
 
                 executor.execute(new AsyncRequestProcessor(asyncCtx,request,response));
     }
-
     /**
      * Returns a short description of the servlet.
      *
