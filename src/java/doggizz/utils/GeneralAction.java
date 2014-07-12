@@ -34,7 +34,7 @@ public class GeneralAction {
     public static final int LOADING_ALL_NEW_MESSAGES = 13;
     public static final int SENDING_NEW_MESSAGE = 14;
     public static final int LOADING_ALL_MESSAGES = 15;
-    public static final int LOADING_CHECK_MESSAGES_GROUP_ID_COUNT = 40;
+    public static final int LOADING_CHECK_MESSAGES_GROUP_ID_COUNT = 41;
     public static final int UPLOAD_PICTURE = 16;
     public static final int LOAD_PICTURE = 17;
     public static final int SENDING_POINT = 18;
