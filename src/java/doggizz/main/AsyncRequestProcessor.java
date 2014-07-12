@@ -180,7 +180,28 @@ public class AsyncRequestProcessor implements Runnable {
                     up = null;
                     break;
                 }
+                case GeneralAction.UPDATE_USER_NAME_PHONE:
+                 {
+                     User u = requestAction.getUser(); 
+                     LoadingUsers lu = new LoadingUsers();
                     
+                    try
+                    {
+                        if(u!=null){
+                            lu.UpdateUserNamePhone(u);
+                        }
+                        
+                    }
+                    finally
+                    {
+                            responseObject.setResponseStatus("OK");
+                            out.print(createServerResponse(responseObject));
+                    }
+                    u = null;
+                    
+                            
+                 break;
+                 }
                 case GeneralAction.LOADING_ALL_PARKS:
                 {
                     ArrayList<Park> parkList = new ArrayList<Park>();

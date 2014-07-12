@@ -16,6 +16,11 @@ import java.util.List;
 public class GeneralAction {
     public static final int SENDING_REGISTRATION_INFO = 1;
     public static final int LOADING_ALL_PARKS = 2;
+    /*
+    Loading User From Server 
+    Send:GeneralAction with ID field.
+    Receieve:User Class (NOT include dog,owner pictures)Wraped in GeneralAction.
+    */
     public static final int LOADING_USER = 3;
     public static final int CHECK_LOGIN = 4;
     public static final int LOADING_POINT_LOCATION = 5;
@@ -43,6 +48,11 @@ public class GeneralAction {
     public static final int LOADING_BOARD_MESSAGES = 26;
     public static final int UPLOAD_BOARD_MESSAGES = 27;
     public static final int UPLOAD_TOP_BOARD_MESSAGES = 28;
+    /*
+    Uploading ActivePoint To Server (e.g:INSPECTOR,LOSTDOG,REPORTSMTH):
+    Send:GeneralAction with ActivePoints Class.
+    Receieve:"OK" in respond Status.
+    */
     public static final int UPLOAD_ACTIVE_POINT = 29;
     /*
     Uploading TaggedUser To Server:
@@ -51,9 +61,10 @@ public class GeneralAction {
     */
     public static final int UPLOAD_TAGGED_USER = 30;
     /*
-    Load TaggedUserList From Server:
+    Load TaggedUserList of User specified by his ID From Server:
     Send:GeneralAction with ID.
-    Receieve:"OK" in respondStatus wrapped in GeneralAction.
+    Receieve:TaggedList of taggetdUsers when User Field is Null.
+    "OK" in respondStatus wrapped in GeneralAction.
     */
     public static final int LOADING_ALL_TAGGED_USERS = 31;
      /*
@@ -65,10 +76,18 @@ public class GeneralAction {
     public static final int UPLOAD_FAVORITE_PARK = 33;
     public static final int LOADING_ALL_FAVORITE_PARKS = 34;
     public static final int REMOVE_FAVORITE_PARK= 35;
+    /*
+    Load User and UserPass to Server:
+    Send:GeneralAction with User UserPass Classes.
+    (in case of dog,owner pictures are NULL the current one won't
+    be replaced.
+    Receieve:"OK" in respondStatus wrapped in GeneralAction.
+    */
     public static final int UPDATE_USER_INFO = 36;
     public static final int LOAD_ALL_DWPOINTS = 37;
     public static final int REMOVE_DWPOINT = 38;
     public static final int SENDING_DWPOINTS = 39;
+    public static final int UPDATE_USER_NAME_PHONE = 40;
     
     
     private long id;
