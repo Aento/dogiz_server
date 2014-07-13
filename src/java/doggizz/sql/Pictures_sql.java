@@ -60,6 +60,7 @@ public class Pictures_sql {
         CallableStatement cstmt = null;
         ResultSet rs = null;
         Picture pic = new Picture();
+        System.out.println("Load picture id = "+id);
         try{
             con = Pool.getConnection();
             cstmt = con.prepareCall("{call sp_Load_Picture (?)}");

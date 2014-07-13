@@ -61,7 +61,7 @@ public class SendingRegistrationInfo {
                 cstmt.setString(19, null);
             }
             if(u.getDog_pic().getPicture().length()>1){
-                cstmt.setString(20, u.getOwner_pic().getPicture());
+                cstmt.setString(20, u.getDog_pic().getPicture());
             }
             else {
                 cstmt.setString(20, null);
