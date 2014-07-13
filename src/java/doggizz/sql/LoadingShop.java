@@ -57,4 +57,6 @@ public class LoadingShop {
         }
         return shopList;
     }
+    
+    //*********************
 }
