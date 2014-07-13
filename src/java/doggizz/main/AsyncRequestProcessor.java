@@ -242,26 +242,26 @@ public class AsyncRequestProcessor implements Runnable {
 //                    break;
 //                }
 //                    
-//                case GeneralAction.LOADING_ALL_SHOPS:
-//                {
-//                    ArrayList<Shop> shopList = new ArrayList<Shop>();
-//                    try
-//                    {
-//                        
-//                        LoadingShop ls = new LoadingShop();
-//                        shopList = ls.LoadingShop();
-//                        ls = null;
-//                    }
-//                    finally
-//                    {
-//                        responseObject.setShopList(shopList);
-//                        responseObject.setResponseStatus("OK");
-//                        out.print(createServerResponse(responseObject));
-//                        shopList = null;
-//                    }
-//                    break;
-//                }
-//                 
+                case GeneralAction.LOADING_ALL_SHOPS:
+                {
+                    ArrayList<Shop> shopList = new ArrayList<Shop>();
+                    try
+                    {
+                        
+                        LoadingShop ls = new LoadingShop();
+                        shopList = ls.LoadingShop();
+                        ls = null;
+                    }
+                    finally
+                    {
+                        responseObject.setShopList(shopList);
+                        responseObject.setResponseStatus("OK");
+                        out.print(createServerResponse(responseObject));
+                        shopList = null;
+                    }
+                    break;
+                }
+                 
                 case GeneralAction.LOADING_USER:
                 {
                     User u = new User();
