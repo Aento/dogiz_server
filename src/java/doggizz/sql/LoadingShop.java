@@ -27,7 +27,7 @@ public class LoadingShop {
         ArrayList<Shop> shopList = new ArrayList<Shop>();
         try {
             con = Pool.getConnection();
-            cstmt = con.prepareCall("{call sp_Load_All_Shop}");
+            cstmt = con.prepareCall("{call sp_Load_All_Shop}");//
             rs = cstmt.executeQuery();
 
             while(rs.next())
