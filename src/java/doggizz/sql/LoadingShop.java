@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ *22222222222222222222222222222
  * @author Stas
  */
 public class LoadingShop {
