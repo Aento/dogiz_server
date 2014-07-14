@@ -250,7 +250,7 @@ public class AsyncRequestProcessor implements Runnable {
                         
                         LoadingShop ls = new LoadingShop();
                         shopList = ls.LoadingShop();
-                        ls = null;
+                        ls = null;//
                     }
                     finally
                     {
