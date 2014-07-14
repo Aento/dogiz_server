@@ -4,6 +4,7 @@
  */
 package doggizz.cloud;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
 import doggizz.classes.Gcm_id;
 import doggizz.sql.Gcm;
 import java.beans.PropertyVetoException;
@@ -40,7 +41,7 @@ public class SendingMessage {
             
             
         if(gcm_id.getOs_code()==2){
-            final String userName = "621192712917" + "@gcm.googleapis.com";
+         /*   final String userName = "621192712917" + "@gcm.googleapis.com";
             //final String userName = "621192712917@developer.gserviceaccount.com";
             final String password = "AIzaSyC6DPs9chpI8wQC-rqm887JxrYjVp6CCzg";
             SmackCcsClient ccsClient;
@@ -78,6 +79,19 @@ public class SendingMessage {
             } catch (PropertyVetoException ex) {
                 Logger.getLogger(SendingMessage.class.getName()).log(Level.SEVERE, null, ex);
             }
+            
+            
+*/
+            String apiKey = "AIzaSyC6DPs9chpI8wQC-rqm887JxrYjVp6CCzg";
+            Content c = new Content();
+            c.addRegId(gcm_id.getGcm_id());
+            c.createData("action","1");
+            try {
+                POST2GCM.post(apiKey, c);
+            } catch (JsonGenerationException ex) {
+                Logger.getLogger(SendingMessage.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
+    
 }
