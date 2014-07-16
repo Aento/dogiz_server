@@ -273,9 +273,9 @@ public class LoadingCheckIn {
         Calendar c = Calendar.getInstance();
         c.setTime(date);
         Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, c.YEAR);
-        cal.set(Calendar.MONTH, c.MONTH);
-        cal.set(Calendar.DATE, c.DATE);
+        cal.set(Calendar.YEAR, c.get(Calendar.YEAR)); 
+        cal.set(Calendar.MONTH, c.get(Calendar.MONTH));
+        cal.set(Calendar.DATE, c.get(Calendar.DATE));
         cal.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hour));
         cal.set(Calendar.MINUTE, Integer.valueOf(minute));
         return cal;

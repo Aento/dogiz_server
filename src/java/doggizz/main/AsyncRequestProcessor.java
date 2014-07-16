@@ -221,27 +221,27 @@ public class AsyncRequestProcessor implements Runnable {
                     }
                     break;
                 }
-//                    
-//                case GeneralAction.LOADING_ALL_VETERINARIANS:
-//                {
-//                    ArrayList<Veterinarian> vetList = new ArrayList<Veterinarian>();
-//                    try
-//                    {
-//                        
-//                        LoadingVeterinarian lv = new LoadingVeterinarian();
-//                        vetList = lv.LoadingVeterinarian();
-//                        lv = null;
-//                    }
-//                    finally
-//                    {
-//                        responseObject.setVetList(vetList);
-//                        responseObject.setResponseStatus("OK");
-//                        out.print(createServerResponse(responseObject));
-//                        vetList = null;
-//                    }
-//                    break;
-//                }
-//                    
+                    
+                case GeneralAction.LOADING_ALL_VETERINARIANS:
+                {
+                    ArrayList<Veterinarian> vetList = new ArrayList<Veterinarian>();
+                    try
+                    {
+                        
+                        LoadingVeterinarian lv = new LoadingVeterinarian();
+                        vetList = lv.LoadingVeterinarian();
+                        lv = null;
+                    }
+                    finally
+                    {
+                        responseObject.setVetList(vetList);
+                        responseObject.setResponseStatus("OK");
+                        out.print(createServerResponse(responseObject));
+                        vetList = null;
+                    }
+                    break;
+                }
+                    
                 case GeneralAction.LOADING_ALL_SHOPS:
                 {
                     ArrayList<Shop> shopList = new ArrayList<Shop>();
@@ -559,7 +559,13 @@ public class AsyncRequestProcessor implements Runnable {
                     try
                     {
                         Pictures_sql pic = new Pictures_sql();
-                        picture = pic.LoadPictureOfUser(requestAction.getId());
+                        String picture_of = requestAction.getString();
+                        if(picture_of == null)
+                            picture = pic.LoadPictureOfUser(requestAction.getId(),null);
+                        else if (picture_of.equals("user"))
+                            picture = pic.LoadPictureOfUser(requestAction.getId(),picture_of);
+                        else if (picture_of.equals("dog"))
+                            picture = pic.LoadPictureOfUser(requestAction.getId(),picture_of);
                         pic = null;
                     }
                     finally

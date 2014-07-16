@@ -115,7 +115,7 @@ public class GeneralAction {
     private ArrayList<Park> parkList;
     private ArrayList<ParkCheckinTotal> parkCheckInTotalList;
     private ArrayList<Picture> pictureList;
-//    private ArrayList<Veterinarian> vetList;
+    private ArrayList<Veterinarian> vetList;
     private ArrayList<Shop> shopList;
     private ArrayList<PointLocation> pointList;
     private ArrayList<ParkCheckIn> checkinList;
@@ -250,13 +250,13 @@ public class GeneralAction {
     public void setTaggedList(ArrayList<TaggedUser> taggedList) {
         this.taggedList = taggedList;
     }
-//    public ArrayList<Veterinarian> getVetList() {
-//        return vetList;
-//    }
-//
-//    public void setVetList(ArrayList<Veterinarian> vetList) {
-//        this.vetList = vetList;
-//    }
+    public ArrayList<Veterinarian> getVetList() {
+        return vetList;
+    }
+
+    public void setVetList(ArrayList<Veterinarian> vetList) {
+        this.vetList = vetList;
+    }
     
     public ArrayList<Shop> getShopList() {
             return shopList;
