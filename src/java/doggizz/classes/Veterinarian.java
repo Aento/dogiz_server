@@ -12,11 +12,9 @@ import javax.persistence.Id;
  *
  * @author Stas
  */
-@Entity
-public class Veterinarian implements Serializable {
-    private static final long serialVersionUID = 1L;
-    @Id
-    //@GeneratedValue(strategy = GenerationType.AUTO)
+
+public class Veterinarian{
+
     private Long id;
     private String name;
     private String address;
@@ -89,31 +87,4 @@ public class Veterinarian implements Serializable {
     public void setPointid(Long pointid) {
         this.pointid = pointid;
     }
-
-    
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Veterinarian)) {
-            return false;
-        }
-        Veterinarian other = (Veterinarian) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "startup.ourdogs.classes.Veterinarian[ id=" + id + " ]";
-    }
-    
 }

@@ -83,7 +83,7 @@ public class Pictures_sql {
         return pic;
     }
     
-    public Picture LoadPictureOfUser(long id)
+    public Picture LoadPictureOfUser(long id,String picture_of)
     {
         Connection con = null;
         CallableStatement cstmt = null;
@@ -91,7 +91,10 @@ public class Pictures_sql {
         Picture pic = new Picture();
         try{
             con = Pool.getConnection();
-            cstmt = con.prepareCall("{call sp_Load_Picture_Of_User (?)}");
+            if(picture_of==null||picture_of.equals("user"))
+                cstmt = con.prepareCall("{call sp_Load_Picture_Of_User (?)}");
+            else
+                  cstmt = con.prepareCall("{call sp_Load_Picture_Of_Dog (?)}");  
             cstmt.setLong(1, id);
             rs = cstmt.executeQuery();
             

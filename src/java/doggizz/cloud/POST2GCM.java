@@ -3,6 +3,8 @@
  * and open the template in the editor.
  */
 package doggizz.cloud;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import java.io.BufferedReader;
@@ -40,7 +42,8 @@ public class POST2GCM {
 
             //`5.1 Use Jackson object mapper to convert Contnet object into JSON
             ObjectMapper mapper = new ObjectMapper();
-
+            mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+            
             // 5.2 Get connection output stream
             DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
 

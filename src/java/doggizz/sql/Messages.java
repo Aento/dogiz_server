@@ -62,9 +62,9 @@ public class Messages {
                 System.out.println(e);
             }
             if(messageList.size()>0){
-                cstmt = con.prepareCall("{call sp_Uncheck_Message (?,?)}");
-                cstmt.setLong(1, messageList.get(0).getGroup_id());
-                cstmt.setLong(2,user_id);
+                cstmt = con.prepareCall("{call sp_Uncheck_Message (?)}");
+                //cstmt.setLong(1, messageList.get(0).getGroup_id());
+                cstmt.setLong(1,user_id);
                 try
                 {
                     cstmt.execute();
@@ -177,9 +177,9 @@ public class Messages {
                 System.out.println(e);
             }
             if(messageList.size()>0){
-                cstmt = con.prepareCall("{call sp_Uncheck_Message (?,?)}");
-                cstmt.setLong(1, messageList.get(0).getGroup_id());
-                cstmt.setLong(2,user_id);
+                cstmt = con.prepareCall("{call sp_Uncheck_Message (?)}");
+                //cstmt.setLong(1, messageList.get(0).getGroup_id());
+                cstmt.setLong(1,user_id);
                 try
                 {
                     cstmt.execute();
@@ -265,9 +265,9 @@ public class Messages {
         Calendar c = Calendar.getInstance();
         c.setTime(date);
         Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, c.YEAR);
-        cal.set(Calendar.MONTH, c.MONTH);
-        cal.set(Calendar.DATE, c.DATE);
+        cal.set(Calendar.YEAR, c.get(Calendar.YEAR)); 
+        cal.set(Calendar.MONTH, c.get(Calendar.MONTH));
+        cal.set(Calendar.DATE, c.get(Calendar.DATE));
         cal.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hour));
         cal.set(Calendar.MINUTE, Integer.valueOf(minute));
         return cal;
