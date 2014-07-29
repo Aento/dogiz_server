@@ -132,6 +132,8 @@ public class SendingMessage {
             
 */
             String apiKey = "AIzaSyC6DPs9chpI8wQC-rqm887JxrYjVp6CCzg";
+             //String apiKey = "AIzaSyDdkuQfmIPLcmYZiVCQ_RTq-S_PitOJnvY";
+
             Content c = new Content();
             c.addRegId(gcm_id.getGcm_id());
             c.createData("action","1");

@@ -264,6 +264,64 @@ public class LoadingCheckIn {
         return user_list;
     }
     
+    
+    public ArrayList<User> CheckInUsers(long park_id)
+    {
+        ArrayList<User> user_list = new ArrayList<User>();
+        Connection con = null;
+        CallableStatement cstmt = null;
+        ResultSet rs = null;
+        
+        try {
+            con = Pool.getConnection();
+            cstmt = con.prepareCall("{call sp_Load_CheckIn_Users (?)}");
+            cstmt.setLong(1, park_id);
+            rs = cstmt.executeQuery();
+            User u;
+            Picture p;
+            while(rs.next())
+            {
+                u = new User();
+                //p = new Picture();  
+                Picture op = new Picture();
+                Picture dp = new Picture();
+                u.setId(rs.getLong(1));
+                u.setOwner_name(rs.getString(2));
+                u.setEmail(rs.getString(3));
+                u.setOwner_gender(rs.getInt(4));
+                op.setId(rs.getLong(5));
+                u.setOwner_pic(op);
+                u.setOwner_pic_id(op.getId());
+                dp.setId(rs.getLong(6));
+                u.setDog_pic(dp);
+                u.setDog_pic_id(dp.getId());
+                u.setDog_name(rs.getString(7));
+                u.setDog_breed(rs.getInt(8));
+                u.setDog_birthdate(DateToCalendar(rs.getDate(9)));
+                u.setDog_gender(rs.getInt(10));
+                u.setDw_status(rs.getInt(11));
+                u.setPhone(rs.getInt(12));
+                u.setPhone_second(rs.getInt(13));
+                u.setDw_details(rs.getString(14));
+                u.setDog_castrated(rs.getInt(15));
+                u.setVet_id(rs.getLong(16));
+                u.setFood_id(rs.getLong(17));
+                u.setOwner_surname(rs.getString(18));
+                u.setDw_active(rs.getInt(19));
+                user_list.add(u);
+                
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(LoadingUsers.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            try { cstmt.close(); } catch (Exception e) { /* ignored */ }
+            try { con.close(); } catch (Exception e) { /* ignored */ }
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+        }
+        
+        return user_list;
+    }
+    
     public static Calendar TimestampToCalendar(Timestamp date)
     { 
         DateFormat hours = new SimpleDateFormat( "HH" );
