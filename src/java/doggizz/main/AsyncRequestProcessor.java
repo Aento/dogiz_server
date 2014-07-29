@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +53,9 @@ public class AsyncRequestProcessor implements Runnable {
 	public void run() {
         try {
             processRequest(request,response);
-            System.out.println("Operation code: " + opCode);
+            Calendar c = Calendar.getInstance();
+            System.out.println("Operation code: " + opCode + " Date: " + c.get(Calendar.YEAR)+ "-" + c.get(Calendar.MONTH) + "-" + c.get(Calendar.DATE) + " " 
+                    + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND));
             asyncContext.complete();
         } catch (ServletException ex) {
             Logger.getLogger(AsyncRequestProcessor.class.getName()).log(Level.SEVERE, null, ex);
@@ -452,7 +455,7 @@ public class AsyncRequestProcessor implements Runnable {
                         SendingMessage sm = new SendingMessage();
                         id = m.getId();
                         if(id!=0&&id!=null)
-                            sm.SendingMessage(requestAction.getMessage().getReceiver().getId());
+                            sm.SendingMessage(requestAction.getMessage().getReceiver().getId(),1);
                         sm = null;
                         msg = null;
                     }
@@ -560,12 +563,16 @@ public class AsyncRequestProcessor implements Runnable {
                     {
                         Pictures_sql pic = new Pictures_sql();
                         String picture_of = requestAction.getString();
-                        if(picture_of == null)
+                        if(picture_of == null || !picture_of.equals("user") || picture_of.equals("dog"))
                             picture = pic.LoadPictureOfUser(requestAction.getId(),null);
-                        else if (picture_of.equals("user"))
+                        else if (picture_of.equals("user")) {
+                            System.out.println("loading user picture: " + requestAction.getId());
                             picture = pic.LoadPictureOfUser(requestAction.getId(),picture_of);
-                        else if (picture_of.equals("dog"))
+                        }
+                        else if (picture_of.equals("dog")){
+                            System.out.println("loading dog picture: " + requestAction.getId());
                             picture = pic.LoadPictureOfUser(requestAction.getId(),picture_of);
+                        }
                         pic = null;
                     }
                     finally
@@ -704,16 +711,28 @@ public class AsyncRequestProcessor implements Runnable {
                 case GeneralAction.UPLOAD_BOARD_MESSAGES:
                 {
                     long id = 0;
+                    BoardMessages bm_with_id = null;
                     try
                     {
                         SqlBoardMessages bm = new SqlBoardMessages();
-                        id = bm.UploadBoardMEssage(requestAction.getBoardMessage());
+                        SendingMessage sm = new SendingMessage();
+                        bm_with_id = bm.UploadBoardMEssage(requestAction.getBoardMessage());
+                        if(bm_with_id!=null) {
+                            long parent_user_id = bm.LoadTopBoardUserId(bm_with_id.getParent_id());
+                            if(parent_user_id!=0)
+                                sm.SendingMessage(parent_user_id,2);
+                        }   
+                        sm = null;
                         bm = null;
                     }
                     finally
                     {
-                        responseObject.setId(id);
-                        responseObject.setResponseStatus("OK");
+                        if(bm_with_id!=null){
+                            responseObject.setBoardMessage(bm_with_id);
+                            responseObject.setResponseStatus("OK");
+                        } else {
+                            responseObject.setResponseStatus("ERROR");
+                        }
                         out.print(createServerResponse(responseObject));
                     }
                     break;
@@ -880,6 +899,68 @@ public class AsyncRequestProcessor implements Runnable {
                     }
                     break;
                 } 
+                    
+                case GeneralAction.LOADING_ALL_REPORTS:
+                {
+                    ArrayList<ActivePoints> pointsList = new ArrayList<ActivePoints>();
+                    try
+                    {
+                        Points_sql p = new Points_sql();
+                        pointsList = p.LoadingMyAreaReports(requestAction.getLatitude(), requestAction.getLongitude());
+                        p = null;
+                        System.out.println(""+pointsList.size());
+                    }
+                    finally
+                    {
+                        responseObject.setActPointsList(pointsList);
+                        responseObject.setResponseStatus("OK");
+                        out.print(createServerResponse(responseObject));
+                    }
+                    //picture = null;
+                    break;
+                }
+                    
+                case GeneralAction.SENDING_DWPOINTS:
+                {
+                    long id = 0;
+                    try
+                    {
+                        DWPoints_sql dw = new DWPoints_sql();
+                        id = dw.SendingDWPoint(requestAction.getActPoint());
+                        dw = null;
+                    }
+                    finally
+                    {
+                        responseObject.setId(id);
+                        responseObject.setResponseStatus("OK");
+                        out.print(createServerResponse(responseObject));
+                    }
+                    break;
+                } 
+                    
+                case GeneralAction.REMOVE_DWPOINT:
+                {
+                    try
+                    {
+                        DWPoints_sql dw = new DWPoints_sql();
+                        try{
+                            dw.RemoveDWPoint(requestAction.getId());
+                            responseObject.setResponseStatus("OK");
+                        }
+                        catch(Exception e){
+                            System.out.println(""+e);
+                            responseObject.setResponseStatus("ERROR");
+                        }
+                        dw = null;
+                    }
+                    finally
+                    {
+                        out.print(createServerResponse(responseObject));
+                    }
+                    break;
+                }
+                
+                    
             }
         }catch(IOException e)
 	{

@@ -5,14 +5,10 @@
 package doggizz.sql;
 
 import doggizz.classes.ActivePoints;
-import doggizz.classes.Park;
 import doggizz.classes.ParkCheckinTotal;
-import doggizz.classes.Picture;
-import doggizz.utils.GeneralAction;
 import doggizz.utils.Pool;
 import java.sql.*;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -70,23 +66,11 @@ public class Points_sql {
             cstmt.setFloat(1, latitude);
             cstmt.setFloat(2, longtitude);
             rs = cstmt.executeQuery();
-            
-            //java.util.Date dt = new java.util.Date();
-
-            //java.text.SimpleDateFormat sdf = 
-                //new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-            //String dateTime = sdf.format(dt);
-            Calendar cal = Calendar.getInstance();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            
-            
             while(rs.next())
             {
                 ActivePoints point = new ActivePoints();
                 point.setId(rs.getLong(1));
-                cal.setTime(sdf.parse(rs.getTimestamp(2).toString()));
-                point.setSend_time(cal);
+                point.setSend_time(TimestampToCalendar(rs.getTimestamp(2)));
                 point.setUser_id(rs.getLong(3));
                 point.setLatitude(rs.getDouble(4));
                 point.setLongitude(rs.getDouble(5));
@@ -95,8 +79,6 @@ public class Points_sql {
                 point.setFree_text(rs.getString(8));
                 pointsList.add(point);
             }
-        } catch (ParseException ex) {
-            Logger.getLogger(Points_sql.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(LoadingUsers.class.getName()).log(Level.SEVERE, null, ex);
         }finally {
@@ -140,6 +122,42 @@ public class Points_sql {
         return totalList;
    }
    
+   public ArrayList<ActivePoints> LoadingMyAreaReports(Float latitude,Float longtitude)
+   {
+        Connection con = null;
+        CallableStatement cstmt = null;
+        ResultSet rs = null;
+        ArrayList<ActivePoints> pointsList = new ArrayList<ActivePoints>();
+        //ArrayList<Picture> picList = new ArrayList<Picture>();
+        try{
+            con = Pool.getConnection();
+            cstmt = con.prepareCall("{call sp_Load_Center_Screen_Report_Points (?,?)}");
+            cstmt.setFloat(1, latitude);
+            cstmt.setFloat(2, longtitude);
+            rs = cstmt.executeQuery();
+            while(rs.next())
+            {
+                ActivePoints point = new ActivePoints();
+                point.setId(rs.getLong(1));
+                point.setSend_time(TimestampToCalendar(rs.getTimestamp(2)));
+                point.setUser_id(rs.getLong(3));
+                point.setLatitude(rs.getDouble(4));
+                point.setLongitude(rs.getDouble(5));
+                point.setAction_id(rs.getInt(6));
+                point.setPark_id(rs.getLong(7));
+                point.setFree_text(rs.getString(8));
+                pointsList.add(point);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(LoadingUsers.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            try { cstmt.close(); } catch (Exception e) { /* ignored */ }
+            try { con.close(); } catch (Exception e) { /* ignored */ }
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+        }
+        return pointsList;
+   }        
+   
    public ArrayList<ActivePoints> LoadingCeneterScreenAreaPoints(Float latitude,Float longtitude)
    {
         Connection con = null;
@@ -153,17 +171,10 @@ public class Points_sql {
             cstmt.setFloat(1, latitude);
             cstmt.setFloat(2, longtitude);
             rs = cstmt.executeQuery();
-            
-            //Calendar cal = Calendar.getInstance();
-            //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            
-            
             while(rs.next())
             {
                 ActivePoints point = new ActivePoints();
-                //Picture pic = new Picture();
                 point.setId(rs.getLong(1));
-                //cal.setTime(sdf.parse(rs.getTimestamp(2).toString()));
                 point.setSend_time(TimestampToCalendar(rs.getTimestamp(2)));
                 point.setUser_id(rs.getLong(3));
                 point.setLatitude(rs.getDouble(4));
@@ -172,10 +183,6 @@ public class Points_sql {
                 point.setPark_id(rs.getLong(7));
                 point.setFree_text(rs.getString(8));
                 pointsList.add(point);
-                //pic.setId(rs.getLong(8));
-                //pic.setPicture(rs.getString(9));
-                //pic.setUser_id(point.getUser_id());
-                //picList.add(pic);
             }
         } catch (SQLException ex) {
             Logger.getLogger(LoadingUsers.class.getName()).log(Level.SEVERE, null, ex);
@@ -184,8 +191,6 @@ public class Points_sql {
             try { con.close(); } catch (Exception e) { /* ignored */ }
             try { rs.close(); } catch (Exception e) { /* ignored */ }
         }
-        //responseObject.setActPointsList(pointsList);
-        //responseObject.setPictureList(picList);
         return pointsList;
    }
    

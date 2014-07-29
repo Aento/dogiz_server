@@ -38,6 +38,7 @@ public class DWPoints_sql {
                 a.setLatitude(rs.getFloat(3));
                 a.setLongitude(rs.getFloat(4));
                 a.setSend_time(TimestampToCalendar(rs.getTimestamp(5)));
+                a.setAction_id(rs.getInt(6));
                 ap.add(a);
             }
             cstmt.close();
@@ -66,7 +67,7 @@ public class DWPoints_sql {
             con = Pool.getConnection();
             cstmt = con.prepareCall("{call sp_Remove_DWPoint(?)}");
             cstmt.setLong(1,user_id);
-            cstmt.executeQuery();
+            cstmt.execute();
 
             cstmt.close();
             con.close();
@@ -79,23 +80,26 @@ public class DWPoints_sql {
         }
     }
     
-    public void SendingDWPoint(ActivePoints ap)
+    public long SendingDWPoint(ActivePoints ap)
     {
+        long id = 0;
         Connection con = null;
         CallableStatement cstmt = null;
         Calendar c = Calendar.getInstance();
         try
         {
             con = Pool.getConnection();
-            cstmt = con.prepareCall("{call sp_Add_DWPoint (?,?,?,?)}");
+            cstmt = con.prepareCall("{?=call sp_Add_DWPoint (?,?,?,?)}");
+            cstmt.registerOutParameter(1, java.sql.Types.BIGINT);
             java.sql.Timestamp timestamp = new java.sql.Timestamp(c.getTimeInMillis());
-            cstmt.setLong(1, ap.getUser_id());
-            cstmt.setFloat(2, (float)ap.getLatitude());
-            cstmt.setFloat(3, (float)ap.getLongitude());
-            cstmt.setTimestamp(4, timestamp);
+            cstmt.setLong(2, ap.getUser_id());
+            cstmt.setFloat(3, (float)ap.getLatitude());
+            cstmt.setFloat(4, (float)ap.getLongitude());
+            cstmt.setTimestamp(5, timestamp);
             try
             {
                 cstmt.execute();
+                id = Long.valueOf(cstmt.getInt(1));
             }
             catch(SQLException e)
             {
@@ -103,6 +107,8 @@ public class DWPoints_sql {
             }
             cstmt.close();
             con.close();
+            
+            return id;
         }
         catch(SQLException e)
         {
@@ -111,6 +117,8 @@ public class DWPoints_sql {
             try { cstmt.close(); } catch (Exception e) { /* ignored */ }
             try { con.close(); } catch (Exception e) { /* ignored */ }
         }
+        
+        return id;
     }
     
     public static Calendar TimestampToCalendar(Timestamp date)

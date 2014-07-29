@@ -88,7 +88,7 @@ public class GeneralAction {
     public static final int REMOVE_DWPOINT = 38;
     public static final int SENDING_DWPOINTS = 39;
     public static final int UPDATE_USER_NAME_PHONE = 40;
-    
+    public static final int LOADING_ALL_REPORTS = 42;
     
     private long id;
     private long id2;
