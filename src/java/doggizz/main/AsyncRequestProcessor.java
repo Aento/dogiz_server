@@ -51,8 +51,9 @@ public class AsyncRequestProcessor implements Runnable {
 	@Override
 	public void run() {
         try {
+            System.out.println("Start Request with Operation code: " + opCode);
             processRequest(request,response);
-            System.out.println("Operation code: " + opCode);
+            System.out.println("Finish Request with Operation code: " + opCode);
             asyncContext.complete();
         } catch (ServletException ex) {
             Logger.getLogger(AsyncRequestProcessor.class.getName()).log(Level.SEVERE, null, ex);
@@ -442,6 +443,7 @@ public class AsyncRequestProcessor implements Runnable {
 //                
                 case GeneralAction.SENDING_NEW_MESSAGE:
                 {
+                    System.out.println("Sending New Message");
                     Long id = null;
                     //long sender_id = requestAction.getId();
                     Messages msg = new Messages();
@@ -451,8 +453,12 @@ public class AsyncRequestProcessor implements Runnable {
                         m = msg.Sending_New_Message(requestAction.getMessage());     
                         SendingMessage sm = new SendingMessage();
                         id = m.getId();
+                        long receiverId = 2;
+                        System.out.println("Sending New Message check 111");
+                        System.out.println("Message id = " + id);
                         if(id!=0&&id!=null)
-                            sm.SendingMessage(requestAction.getMessage().getReceiver().getId());
+                           // sm.SendingMessage(receiverId);
+                           sm.SendingMessage(requestAction.getMessage().getReceiver().getId());
                         sm = null;
                         msg = null;
                     }
@@ -479,6 +485,7 @@ public class AsyncRequestProcessor implements Runnable {
                     }
                     finally
                     {
+                       // Error On Purpose
                         responseObject.setMessageList(msgList);
                         responseObject.setResponseStatus("OK");
                         out.print(createServerResponse(responseObject));
@@ -560,7 +567,7 @@ public class AsyncRequestProcessor implements Runnable {
                     {
                         Pictures_sql pic = new Pictures_sql();
                         String picture_of = requestAction.getString();
-                        if(picture_of == null)
+                        if((picture_of == null) || (picture_of.length() == 0 ))
                             picture = pic.LoadPictureOfUser(requestAction.getId(),null);
                         else if (picture_of.equals("user"))
                             picture = pic.LoadPictureOfUser(requestAction.getId(),picture_of);
@@ -644,12 +651,8 @@ public class AsyncRequestProcessor implements Runnable {
                     ArrayList<User> u = null;
                     try
                     {
-                        String with_picture = requestAction.getString();
                         LoadingCheckIn lch = new LoadingCheckIn();
-                        if(with_picture==null||with_picture.length()==0)
-                            u = lch.CheckInDogsPictures(requestAction.getId());
-                        else
-                            u = lch.CheckInUsers(requestAction.getId());
+                        u = lch.CheckInDogsPictures(requestAction.getId());
                         lch = null;
                     }
                     finally
