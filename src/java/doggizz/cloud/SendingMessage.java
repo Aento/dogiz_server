@@ -32,6 +32,7 @@ public class SendingMessage {
     {
         //IPHONE - 1
         //ANDROID - 2
+        //This message for maste to check merge!!!!
         System.out.println("Sending Message Notification Entry");
         Gcm gcm = new Gcm();
         
