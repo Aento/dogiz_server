@@ -567,6 +567,7 @@ public class AsyncRequestProcessor implements Runnable {
                     {
                         Pictures_sql pic = new Pictures_sql();
                         String picture_of = requestAction.getString();
+
                         if((picture_of == null) || (picture_of.length() == 0 ))
                             picture = pic.LoadPictureOfUser(requestAction.getId(),null);
                         else if (picture_of.equals("user"))
@@ -651,8 +652,12 @@ public class AsyncRequestProcessor implements Runnable {
                     ArrayList<User> u = null;
                     try
                     {
+                        String with_picture = requestAction.getString();
                         LoadingCheckIn lch = new LoadingCheckIn();
-                        u = lch.CheckInDogsPictures(requestAction.getId());
+                        if(with_picture==null||with_picture.length()==0)
+                            u = lch.CheckInDogsPictures(requestAction.getId());
+                        else
+                            u = lch.CheckInUsers(requestAction.getId());
                         lch = null;
                     }
                     finally
