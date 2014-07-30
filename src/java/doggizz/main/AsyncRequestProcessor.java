@@ -563,7 +563,7 @@ public class AsyncRequestProcessor implements Runnable {
                     {
                         Pictures_sql pic = new Pictures_sql();
                         String picture_of = requestAction.getString();
-                        if(picture_of == null || !picture_of.equals("user") || picture_of.equals("dog"))
+                        if(picture_of == null || !picture_of.equals("user") || !picture_of.equals("dog"))
                             picture = pic.LoadPictureOfUser(requestAction.getId(),null);
                         else if (picture_of.equals("user")) {
                             System.out.println("loading user picture: " + requestAction.getId());
