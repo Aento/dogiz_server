@@ -124,7 +124,37 @@ public class SqlBoardMessages {
         return bList;
     }
     
-    public long UploadBoardMEssage(BoardMessages bm) {
+    public long LoadTopBoardUserId(long parent_id)
+    {
+        //ArrayList<BoardMessages> bList = new ArrayStack<BoardMessages>();
+        BoardMessages tb;
+        long user_id = 0;
+        Connection con = null;
+        CallableStatement cstmt = null;
+        ResultSet rs = null;
+        
+        try {
+            con = Pool.getConnection();
+            cstmt = con.prepareCall("{call sp_Load_Top_Board_User (?)}");
+            cstmt.setLong(1, parent_id);
+            
+            rs = cstmt.executeQuery();
+            while(rs.next())
+            {
+                user_id = rs.getLong(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(LoadingUsers.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            try { cstmt.close(); } catch (Exception e) { /* ignored */ }
+            try { con.close(); } catch (Exception e) { /* ignored */ }
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+        }
+        
+        return user_id;
+    }
+    
+    public BoardMessages UploadBoardMEssage(BoardMessages bm) {
         Connection con = null;
         CallableStatement cstmt = null;
         ResultSet rs = null;
@@ -143,7 +173,10 @@ public class SqlBoardMessages {
                 cstmt.setDate(5, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
             cstmt.execute();
             id = Long.valueOf(cstmt.getInt(1));
-            
+            if(id!=0)
+                bm.setId(id);
+            else 
+                return null;
         } catch (SQLException ex) {
             Logger.getLogger(LoadingUsers.class.getName()).log(Level.SEVERE, null, ex);
         }finally {
@@ -151,7 +184,7 @@ public class SqlBoardMessages {
             try { con.close(); } catch (Exception e) { /* ignored */ }
             try { rs.close(); } catch (Exception e) { /* ignored */ }
         }
-        return id;
+        return bm;
     }
     public static Calendar DateToCalendar(Date date)
     { 
@@ -169,9 +202,9 @@ public class SqlBoardMessages {
         Calendar c = Calendar.getInstance();
         c.setTime(date);
         Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, c.YEAR);
-        cal.set(Calendar.MONTH, c.MONTH);
-        cal.set(Calendar.DATE, c.DATE);
+        cal.set(Calendar.YEAR, c.get(Calendar.YEAR)); 
+        cal.set(Calendar.MONTH, c.get(Calendar.MONTH));
+        cal.set(Calendar.DATE, c.get(Calendar.DATE));
         cal.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hour));
         cal.set(Calendar.MINUTE, Integer.valueOf(minute));
         return cal;

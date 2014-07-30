@@ -1,3 +1,4 @@
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -28,7 +29,7 @@ import java.util.List;
  * @author Stas
  */
 public class SendingMessage {
-    public void SendingMessage(Long id)
+    public void SendingMessage(Long id, int action)
     {
         //IPHONE - 1
         //ANDROID - 2
@@ -132,11 +133,10 @@ public class SendingMessage {
             
 */
             String apiKey = "AIzaSyC6DPs9chpI8wQC-rqm887JxrYjVp6CCzg";
-
-             //String apiKey = "AIzaSyDdkuQfmIPLcmYZiVCQ_RTq-S_PitOJnvY";
+            //String apiKey = "AIzaSyDdkuQfmIPLcmYZiVCQ_RTq-S_PitOJnvY";
             Content c = new Content();
             c.addRegId(gcm_id.getGcm_id());
-            c.createData("action","1");
+            c.createData("action","" +action );
             try {
                 POST2GCM.post(apiKey, c);
             } catch (JsonGenerationException ex) {
@@ -146,3 +146,4 @@ public class SendingMessage {
     }
     
 }
+

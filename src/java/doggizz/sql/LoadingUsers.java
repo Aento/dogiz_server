@@ -112,12 +112,13 @@ public class LoadingUsers {
             cstmt.setLong(17, u.getFood_id());
             cstmt.setString(18, u.getOwner_surname());
             cstmt.setInt(19, u.getDw_active());
-            if(u.getOwner_pic().getPicture().length()>1)
+            Picture owner_picture = u.getOwner_pic();
+            if(owner_picture != null && u.getOwner_pic().getPicture().length()>1)
                 cstmt.setString(20, u.getOwner_pic().getPicture());
             else
                 cstmt.setString(20, null);
-            
-            if(u.getDog_pic().getPicture().length()>1)
+            Picture dog_picture = u.getDog_pic();
+            if(dog_picture != null && u.getDog_pic().getPicture().length()>1)
                 cstmt.setString(21, u.getDog_pic().getPicture());
             else
                 cstmt.setString(21, null);
