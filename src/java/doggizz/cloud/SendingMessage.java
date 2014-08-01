@@ -29,23 +29,28 @@ import java.util.List;
  * @author Stas
  */
 public class SendingMessage {
-    public void SendingMessage(Long id, int action)
-    {
+    public void SendingMessage(Long oc_code,int action,String value)
+    {   
+        
+        //  OC_CODE 
         //IPHONE - 1
         //ANDROID - 2
-        //This message for maste to check merge!!!!
-        System.out.println("Sending Message Notification Entry");
+        
+        //  ACTION
+        //Message - 1
+        //BoardMessage - 2
+        
+        
         Gcm gcm = new Gcm();
         
         Gcm_id gcm_id = new Gcm_id();
         try {
-            gcm_id = gcm.Load_Gcm(id);
+            gcm_id = gcm.Load_Gcm(oc_code);
         } catch (SQLException ex) {
             Logger.getLogger(SendingMessage.class.getName()).log(Level.SEVERE, null, ex);
         }
             
-            
-        if(gcm_id.getOs_code() == 1){//IOS
+           if(gcm_id.getOs_code() == 1){//IOS
             try {
             //Push.alert("Hello World!", "E:\\SQLServer\\SharedFolder\\PushNotificationCertificates\\Certificates.p12", "dogiz123", false,gcm_id.getGcm_id());
                 System.out.println("Ios Part");
@@ -63,7 +68,7 @@ public class SendingMessage {
                                        // List<Device> inactiveDevices = Push.feedback("keystore.p12", "dogiz123", false);
                                         System.out.println("Invalid Token");
                                         if(invalidToken != null && !invalidToken.isEmpty()){
-                                            System.out.println("Going to remove following token " +  notification.getDevice().getToken()+ "with user id =" + id);
+                                            System.out.println("Going to remove following token " +  notification.getDevice().getToken()+ "with user id =" + oc_code);
                                             
                                         }
                                         
@@ -86,9 +91,7 @@ public class SendingMessage {
                    Logger.getLogger(SendingMessage.class.getName()).log(Level.SEVERE, null, ex);
             }
            
-        }
-        
-            
+        }  
             
         if(gcm_id.getOs_code()==2){
          /*   final String userName = "621192712917" + "@gcm.googleapis.com";
@@ -132,11 +135,13 @@ public class SendingMessage {
             
             
 */
+            //comment test
             String apiKey = "AIzaSyC6DPs9chpI8wQC-rqm887JxrYjVp6CCzg";
             //String apiKey = "AIzaSyDdkuQfmIPLcmYZiVCQ_RTq-S_PitOJnvY";
             Content c = new Content();
             c.addRegId(gcm_id.getGcm_id());
             c.createData("action","" +action );
+            c.createData("value", "" +value);
             try {
                 POST2GCM.post(apiKey, c);
             } catch (JsonGenerationException ex) {

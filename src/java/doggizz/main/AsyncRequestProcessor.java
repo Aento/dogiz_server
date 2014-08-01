@@ -456,7 +456,7 @@ public class AsyncRequestProcessor implements Runnable {
                         SendingMessage sm = new SendingMessage();
                         id = m.getId();
                         if(id!=0&&id!=null)
-                            sm.SendingMessage(requestAction.getMessage().getReceiver().getId(),1);
+                            sm.SendingMessage(requestAction.getMessage().getReceiver().getId(),1,"");
                         sm = null;
                         msg = null;
                     }
@@ -564,7 +564,7 @@ public class AsyncRequestProcessor implements Runnable {
                     {
                         Pictures_sql pic = new Pictures_sql();
                         String picture_of = requestAction.getString();
-                        if(picture_of == null || !picture_of.equals("user") || picture_of.equals("dog"))
+                        if(picture_of == null || !picture_of.equals("user") || !picture_of.equals("dog"))
                             picture = pic.LoadPictureOfUser(requestAction.getId(),null);
                         else if (picture_of.equals("user")) {
                             System.out.println("loading user picture: " + requestAction.getId());
@@ -721,7 +721,7 @@ public class AsyncRequestProcessor implements Runnable {
                         if(bm_with_id!=null) {
                             long parent_user_id = bm.LoadTopBoardUserId(bm_with_id.getParent_id());
                             if(parent_user_id!=0)
-                                sm.SendingMessage(parent_user_id,2);
+                                sm.SendingMessage(parent_user_id,2,String.valueOf(parent_user_id));
                         }   
                         sm = null;
                         bm = null;
