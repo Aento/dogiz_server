@@ -24,16 +24,25 @@ import org.jivesoftware.smack.XMPPException;
  * @author Stas
  */
 public class SendingMessage {
-    public void SendingMessage(Long id,int action)
-    {
+    public void SendingMessage(Long oc_code,int action,String value)
+    {   
+        
+        //  OC_CODE 
         //IPHONE - 1
         //ANDROID - 2
+        
+        //  ACTION
+        //Message - 1
+        //BoardMessage - 2
+        
+        
+        
         
         Gcm gcm = new Gcm();
         
         Gcm_id gcm_id = new Gcm_id();
         try {
-            gcm_id = gcm.Load_Gcm(id);
+            gcm_id = gcm.Load_Gcm(oc_code);
         } catch (SQLException ex) {
             Logger.getLogger(SendingMessage.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -88,6 +97,7 @@ public class SendingMessage {
             Content c = new Content();
             c.addRegId(gcm_id.getGcm_id());
             c.createData("action","" +action );
+            c.createData("value", "" +value);
             try {
                 POST2GCM.post(apiKey, c);
             } catch (JsonGenerationException ex) {
