@@ -82,5 +82,32 @@ public class Gcm {
             }
             return gcm;
         }
-        
+         //Only for IOS
+       public void UNregistrate_Gcm(Long user_id) throws SQLException
+        {
+            Connection con = null;
+            CallableStatement cstmt = null;
+            try{
+                con = Pool.getConnection();
+                cstmt = con.prepareCall("{call sp_Remove_Gcm_User (?)}");
+                cstmt.setLong(1, user_id);
+                
+                try
+                {
+                    cstmt.execute();
+                }
+                catch(SQLException e)
+                {
+                    System.out.println(e);
+                }
+                cstmt.close();
+                con.close();
+            }catch(SQLException e){
+                System.out.println(e);
+            }finally {
+                try { cstmt.close(); } catch (Exception e) { /* ignored */ }
+                try { con.close(); } catch (Exception e) { /* ignored */ }
+            }
+            
+        }    
 }

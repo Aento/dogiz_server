@@ -68,6 +68,7 @@ public class LoadingCheckIn {
             cstmt.setLong(3, pcheck.getPersonID());
             cstmt.setFloat(4,latitude);
             cstmt.setFloat(5,longtitude);
+            System.out.println("parkID = " + pcheck.getParkID() + "personID = " + pcheck.getPersonID()+ "latitude = "+ latitude + "longitude = " + longtitude);
             try
             {
                 cstmt.execute();

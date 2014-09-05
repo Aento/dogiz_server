@@ -4,6 +4,22 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+            <file>file:/E:/SQLServer/SharedFolder/DoggizServers/dogiz_server8/dogiz_server/src/java/doggizz/cloud/SendingMessage.java</file>
+            <file>file:/E:/SQLServer/SharedFolder/DoggizServers/dogiz_server8/dogiz_server/src/java/doggizz/main/AsyncRequestProcessor.java</file>
+            <file>file:/E:/SQLServer/SharedFolder/DoggizServers/dogiz_server8/dogiz_server/src/java/doggizz/main/DoggizMain.java</file>
+            <file>file:/E:/SQLServer/SharedFolder/DoggizServers/dogiz_server8/dogiz_server/src/java/doggizz/utils/GeneralAction.java</file>
+            <file>file:/E:/SQLServer/SharedFolder/DoggizServers/dogiz_server8/dogiz_server/src/java/doggizz/sql/Gcm.java</file>
+=======
+=======
+>>>>>>> master
+=======
+>>>>>>> master
+>>>>>>> IosNotificationImplementation
             <file>file:/E:/SQLServer/SharedFolder/DoggizServers/dogiz_server8/dogiz_server/src/java/doggizz/classes/TopBoardMessages.java</file>
             <file>file:/E:/SQLServer/SharedFolder/DoggizServers/dogiz_server8/dogiz_server/src/java/doggizz/main/AsyncRequestProcessor.java</file>
             <file>file:/E:/SQLServer/SharedFolder/DoggizServers/dogiz_server8/dogiz_server/src/java/doggizz/cloud/SendingMessage.java</file>
@@ -12,6 +28,16 @@
             <file>file:/E:/SQLServer/SharedFolder/DoggizServers/dogiz_server8/dogiz_server/src/java/doggizz/classes/BoardMessages.java</file>
             <file>file:/E:/SQLServer/SharedFolder/DoggizServers/dogiz_server8/dogiz_server/src/java/doggizz/classes/FavoriteParks.java</file>
             <file>file:/E:/SQLServer/SharedFolder/DoggizServers/dogiz_server8/dogiz_server/src/java/doggizz/utils/GeneralAction.java</file>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> master
+=======
+>>>>>>> master
+=======
+>>>>>>> master
+>>>>>>> IosNotificationImplementation
             <file>file:/E:/SQLServer/SharedFolder/DoggizServers/dogiz_server8/dogiz_server/src/java/doggizz/sql/Messages.java</file>
         </group>
     </open-files>

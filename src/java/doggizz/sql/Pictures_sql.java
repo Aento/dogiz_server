@@ -91,7 +91,9 @@ public class Pictures_sql {
         Picture pic = new Picture();
         try{
             con = Pool.getConnection();
-            if(picture_of==null||picture_of.equals("user"))
+
+            if(picture_of==null || picture_of.equals("user"))
+
                 cstmt = con.prepareCall("{call sp_Load_Picture_Of_User (?)}");
             else
                   cstmt = con.prepareCall("{call sp_Load_Picture_Of_Dog (?)}");  

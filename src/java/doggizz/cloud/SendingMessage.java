@@ -24,6 +24,8 @@ import javapns.*;
 import javapns.devices.Device;
 import javapns.notification.*;
 import java.util.List;
+import org.json.JSONObject;
+
 /**
  *
  * @author Stas
@@ -31,18 +33,15 @@ import java.util.List;
 public class SendingMessage {
     public void SendingMessage(Long oc_code,int action,String value)
     {   
-        
+
         //  OC_CODE 
         //IPHONE - 1
         //ANDROID - 2
         
         //  ACTION
         //Message - 1
-        //BoardMessage - 2
-        
-        
-        Gcm gcm = new Gcm();
-        
+        //BoardMessage - 2    
+        Gcm gcm = new Gcm();   
         Gcm_id gcm_id = new Gcm_id();
         try {
             gcm_id = gcm.Load_Gcm(oc_code);
@@ -50,49 +49,10 @@ public class SendingMessage {
             Logger.getLogger(SendingMessage.class.getName()).log(Level.SEVERE, null, ex);
         }
             
-           if(gcm_id.getOs_code() == 1){//IOS
-            try {
-            //Push.alert("Hello World!", "E:\\SQLServer\\SharedFolder\\PushNotificationCertificates\\Certificates.p12", "dogiz123", false,gcm_id.getGcm_id());
-                System.out.println("Ios Part");
-                List <PushedNotification> notifications = Push.badge(1, "E:\\SQLServer\\SharedFolder\\PushNotificationCertificates\\Certificates.p12", "dogiz123", false,gcm_id.getGcm_id());
-            
-                for (PushedNotification notification : notifications) {
-                                if (notification.isSuccessful()) {
-                                        /* Apple accepted the notification and should deliver it */  
-                                        System.out.println("Push notification sent successfully to: " +
-                                                                        notification.getDevice().getToken());
-                                          
-                                } else {
-                                        String invalidToken = notification.getDevice().getToken();
-                                        /* Add code here to remove invalidToken from your database */  
-                                       // List<Device> inactiveDevices = Push.feedback("keystore.p12", "dogiz123", false);
-                                        System.out.println("Invalid Token");
-                                        if(invalidToken != null && !invalidToken.isEmpty()){
-                                            System.out.println("Going to remove following token " +  notification.getDevice().getToken()+ "with user id =" + oc_code);
-                                            
-                                        }
-                                        
-                                        /* Find out more about what the problem was */  
-                                        Exception theProblem = notification.getException();
-                                        theProblem.printStackTrace();
-        
-                                        /* If the problem was an error-response packet returned by Apple, get it */  
-                                        ResponsePacket theErrorResponse = notification.getResponse();
-                                        if (theErrorResponse != null) {
-                                                System.out.println(theErrorResponse.getMessage());
-                                        }
-                                }
-                }
+        if(gcm_id.getOs_code() == 1)//IOS    
+            SendingMessageToIOS(oc_code, action, value, gcm_id);
 
-           
-           
-           } catch (Exception ex) { 
-               //Keystore or Communicatio Exceptoion may be thrown.
-                   Logger.getLogger(SendingMessage.class.getName()).log(Level.SEVERE, null, ex);
-            }
-           
-        }  
-            
+
         if(gcm_id.getOs_code()==2){
          /*   final String userName = "621192712917" + "@gcm.googleapis.com";
             //final String userName = "621192712917@developer.gserviceaccount.com";
@@ -135,6 +95,7 @@ public class SendingMessage {
             
             
 */
+
             //comment test
             String apiKey = "AIzaSyC6DPs9chpI8wQC-rqm887JxrYjVp6CCzg";
             //String apiKey = "AIzaSyDdkuQfmIPLcmYZiVCQ_RTq-S_PitOJnvY";
@@ -142,6 +103,8 @@ public class SendingMessage {
             c.addRegId(gcm_id.getGcm_id());
             c.createData("action","" +action );
             c.createData("value", "" +value);
+
+
             try {
                 POST2GCM.post(apiKey, c);
             } catch (JsonGenerationException ex) {
@@ -150,5 +113,75 @@ public class SendingMessage {
         }
     }
     
+  
+     public void SendingMessageToIOS(Long userID,int action,String value,Gcm_id gcm_id)
+     {   
+        try {
+
+                System.out.println("SendingMessageToIOS Entry " + userID +" action "+ action + "value " + "gcm_id.getGcm_id() "+ gcm_id.getGcm_id());
+                Gcm gcm = new Gcm();
+                JSONObject payload;
+                JSONObject apsDictionary;
+                payload = new JSONObject();
+                apsDictionary = new JSONObject();
+               
+                payload.put("aps",apsDictionary);
+                apsDictionary.putOpt("content-available",1);
+                apsDictionary.putOpt("alert"," You have received message");
+                apsDictionary.putOpt("action",action);
+                apsDictionary.putOpt("topBardMsg",value);
+                apsDictionary.putOpt("badge",1);
+                /* Build a blank payload to customize */
+                PushNotificationPayload payloadMY = PushNotificationPayload.fromJSON(payload.toString());
+ 
+//                /* Customize the payload */
+//                payloadMY.addBadge(1);
+
+                 /* Push your custom payload */
+                List<PushedNotification> notifications = Push.payload(payloadMY,"E:\\SQLServer\\SharedFolder\\PushNotificationCertificates\\Certificates.p12","dogiz123",false,gcm_id.getGcm_id());
+
+            
+
+                for (PushedNotification notification : notifications) {
+                                if (notification.isSuccessful()) {
+                                        /* Apple accepted the notification and should deliver it */  
+                                        System.out.println("Push notification sent successfully to: " +
+                                                                        notification.getDevice().getToken());
+                                          
+                                } else {
+                                        String invalidToken = notification.getDevice().getToken();
+                                        /* Add code here to remove invalidToken from your database */  
+                                       // List<Device> inactiveDevices = Push.feedback("keystore.p12", "dogiz123", false);
+                                        System.out.println("Invalid Token");
+                                        if(invalidToken != null && !invalidToken.isEmpty()){
+                                            System.out.println("Going to remove following token " +  notification.getDevice().getToken()+ "with user id =" + userID);
+                                            gcm.UNregistrate_Gcm(userID);
+                                            
+                                            
+                                         }
+                                        
+                                        /* Find out more about what the problem was */  
+                                        Exception theProblem = notification.getException();
+                                        theProblem.printStackTrace();
+        
+                                        /* If the problem was an error-response packet returned by Apple, get it */  
+                                        ResponsePacket theErrorResponse = notification.getResponse();
+                                        if (theErrorResponse != null) {
+                                                System.out.println(theErrorResponse.getMessage());
+                                        }
+                                }
+                }
+
+           
+           } catch (Exception ex) { 
+               //Keystore or Communicatio Exceptoion may be thrown.
+                   Logger.getLogger(SendingMessage.class.getName()).log(Level.SEVERE, null, ex);
+           }
+           
+
+        }  
+
+         
+
 }
 

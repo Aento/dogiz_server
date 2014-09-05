@@ -53,10 +53,13 @@ public class AsyncRequestProcessor implements Runnable {
 	@Override
 	public void run() {
         try {
+            System.out.println("Start Request with Operation code: " + opCode);
             processRequest(request,response);
+
             Calendar c = Calendar.getInstance();
             System.out.println("Operation code: " + opCode + " Date: " + c.get(Calendar.YEAR)+ "-" + c.get(Calendar.MONTH) + "-" + c.get(Calendar.DATE) + " " 
                     + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND));
+
             asyncContext.complete();
         } catch (ServletException ex) {
             Logger.getLogger(AsyncRequestProcessor.class.getName()).log(Level.SEVERE, null, ex);
@@ -446,6 +449,7 @@ public class AsyncRequestProcessor implements Runnable {
 //                
                 case GeneralAction.SENDING_NEW_MESSAGE:
                 {
+                    System.out.println("Sending New Message");
                     Long id = null;
                     //long sender_id = requestAction.getId();
                     Messages msg = new Messages();
@@ -455,8 +459,10 @@ public class AsyncRequestProcessor implements Runnable {
                         m = msg.Sending_New_Message(requestAction.getMessage());     
                         SendingMessage sm = new SendingMessage();
                         id = m.getId();
+
                         if(id!=0&&id!=null)
                             sm.SendingMessage(requestAction.getMessage().getReceiver().getId(),1,"");
+
                         sm = null;
                         msg = null;
                     }
@@ -483,6 +489,7 @@ public class AsyncRequestProcessor implements Runnable {
                     }
                     finally
                     {
+                       // Error On Purpose
                         responseObject.setMessageList(msgList);
                         responseObject.setResponseStatus("OK");
                         out.print(createServerResponse(responseObject));
@@ -564,7 +571,10 @@ public class AsyncRequestProcessor implements Runnable {
                     {
                         Pictures_sql pic = new Pictures_sql();
                         String picture_of = requestAction.getString();
-                        if(picture_of == null || !picture_of.equals("user") || !picture_of.equals("dog"))
+
+
+                        if(picture_of == null || picture_of.equals("") )
+
                             picture = pic.LoadPictureOfUser(requestAction.getId(),null);
                         else if (picture_of.equals("user")) {
                             System.out.println("loading user picture: " + requestAction.getId());
@@ -654,7 +664,9 @@ public class AsyncRequestProcessor implements Runnable {
                     {
                         String with_picture = requestAction.getString();
                         LoadingCheckIn lch = new LoadingCheckIn();
+
                         if(with_picture==null||with_picture.length()==0)
+
                             u = lch.CheckInDogsPictures(requestAction.getId());
                         else
                             u = lch.CheckInUsers(requestAction.getId());
@@ -719,9 +731,11 @@ public class AsyncRequestProcessor implements Runnable {
                         SendingMessage sm = new SendingMessage();
                         bm_with_id = bm.UploadBoardMEssage(requestAction.getBoardMessage());
                         if(bm_with_id!=null) {
+
                             long parent_user_id = bm.LoadTopBoardUserId(bm_with_id.getParent_id());
                             if(parent_user_id!=0)
                                 sm.SendingMessage(parent_user_id,2,String.valueOf(parent_user_id));
+
                         }   
                         sm = null;
                         bm = null;
@@ -928,7 +942,9 @@ public class AsyncRequestProcessor implements Runnable {
                     {
                         DWPoints_sql dw = new DWPoints_sql();
                         id = dw.SendingDWPoint(requestAction.getActPoint());
-                        dw = null;
+
+                       dw = null;
+
                     }
                     finally
                     {

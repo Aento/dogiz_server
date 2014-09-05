@@ -487,7 +487,7 @@ public class DoggizMain extends HttpServlet {
                 request.setAttribute("org.apache.catalina.ASYNC_SUPPORTED", true);
                 AsyncContext asyncCtx = request.startAsync(request,response);
                 asyncCtx.addListener(new AppAsyncListener());
-                asyncCtx.setTimeout(10000);
+                asyncCtx.setTimeout(500000);
                 ThreadPoolExecutor executor = (ThreadPoolExecutor) request
                                 .getServletContext().getAttribute("executor");
 

@@ -137,7 +137,9 @@ public class LoadingUsers {
         }
     }
     
-    public long UpdateUserPass(UserPass up)
+
+    public void UpdateUserPass(UserPass up)
+
     {
         Connection con = null;
         CallableStatement cstmt = null;
@@ -161,7 +163,9 @@ public class LoadingUsers {
             try { cstmt.close(); } catch (Exception e) { /* ignored */ }
             try { con.close(); } catch (Exception e) { /* ignored */ }
         }
-        return id;
+
+        //return id;
+
     }
     public void UpdateUserNamePhone (User u){
         Connection con = null;

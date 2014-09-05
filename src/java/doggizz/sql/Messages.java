@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 public class Messages {
     public ArrayList<Message> Load_All_New_Messages(Long user_id)
     {
+        System.out.println("Loading new messages for user with ID = "+ user_id);
         Connection con = null;
         CallableStatement cstmt = null;
         ResultSet rs = null;
