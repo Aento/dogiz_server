@@ -124,6 +124,7 @@ public class DWPoints_sql {
     
     public static Calendar TimestampToCalendar(Timestamp date)
     { 
+        System.out.println("date = " + date);
         DateFormat hours = new SimpleDateFormat( "HH" );
         String hour = hours.format(date);
         DateFormat minutes = new SimpleDateFormat( "mm" );
@@ -136,6 +137,7 @@ public class DWPoints_sql {
         cal.set(Calendar.DATE, c.get(Calendar.DATE));
         cal.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hour));
         cal.set(Calendar.MINUTE, Integer.valueOf(minute));
+        System.out.println("cal = " + cal);
         return cal;
     }
 }

@@ -72,7 +72,7 @@ public class AsyncRequestProcessor implements Runnable {
         }
 	}
         
-            protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+       protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException, PropertyVetoException {
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
@@ -88,9 +88,9 @@ public class AsyncRequestProcessor implements Runnable {
             Query personQuery;
             GeneralAction requestAction = getRequestObject(request);
             
-            opCode = requestAction.getOperationCode();
-
-            if(requestAction==null)
+           // opCode = requestAction.getOperationCode();
+            System.out.println("OPCODE = " + opCode);
+            if(requestAction == null)
             {
                 System.out.println("Test print");
                 out.print("test");
@@ -187,6 +187,7 @@ public class AsyncRequestProcessor implements Runnable {
                     up = null;
                     break;
                 }
+                
                 case GeneralAction.UPDATE_USER_NAME_PHONE:
                  {
                      User u = requestAction.getUser(); 
@@ -204,11 +205,10 @@ public class AsyncRequestProcessor implements Runnable {
                             responseObject.setResponseStatus("OK");
                             out.print(createServerResponse(responseObject));
                     }
-                    u = null;
-                    
-                            
+                    u = null;          
                  break;
                  }
+               
                 case GeneralAction.LOADING_ALL_PARKS:
                 {
                     ArrayList<Park> parkList = new ArrayList<Park>();
@@ -383,8 +383,28 @@ public class AsyncRequestProcessor implements Runnable {
                 {
                     try
                     {
+                        SendingMessage send_msg = new SendingMessage();
                         LoadingCheckIn lci = new LoadingCheckIn();
-                        lci.SendingCheckIn(requestAction.getCheckin(),requestAction.getLatitude(), requestAction.getLongitude());
+                        Calendar last_chackin = lci.SendingCheckIn(requestAction.getCheckin(),requestAction.getLatitude(), requestAction.getLongitude());
+                        if(requestAction.getCheckin().getChecked_time() != null && last_chackin != null){
+                            
+                            Calendar c = Calendar.getInstance();
+                            long last_checkin_diff = c.getTimeInMillis() - last_chackin.getTimeInMillis();
+                            long curr_checkin_diff =  requestAction.getCheckin().getChecked_time().getTimeInMillis() - last_chackin.getTimeInMillis();
+                            
+                            if((curr_checkin_diff == 0) || (last_checkin_diff > 360000)){
+                                
+                                ArrayList<Long> user_list = new ArrayList<Long>();
+                                user_list = lci.SendCheckinAlert(requestAction.getCheckin().getPersonID(), requestAction.getCheckin().getParkID());
+                                if(user_list.size() > 0 ){
+                                    System.out.println("Sending checkin alerts");
+                                    for(Long user_id:user_list){
+                                        send_msg.SendingMessage(user_id, 3, "" + requestAction.getCheckin().getParkID());
+                                    }
+                                    System.out.println("Sending checkin alerts finish");
+                                }
+                            }
+                        }
                         lci = null;
                     }
                     finally
@@ -733,7 +753,7 @@ public class AsyncRequestProcessor implements Runnable {
                         if(bm_with_id!=null) {
 
                             long parent_user_id = bm.LoadTopBoardUserId(bm_with_id.getParent_id());
-                            if(parent_user_id!=0)
+                            if((parent_user_id != 0) && (parent_user_id != bm_with_id.getUser_id()))
                                 sm.SendingMessage(parent_user_id,2,String.valueOf(parent_user_id));
 
                         }   
@@ -955,20 +975,23 @@ public class AsyncRequestProcessor implements Runnable {
                     break;
                 } 
                     
-                case GeneralAction.REMOVE_DWPOINT:
+
+                
+                case GeneralAction.LOADING_SEARCH_RESULT:
                 {
                     try
                     {
-                        DWPoints_sql dw = new DWPoints_sql();
+                        LoadingUsers lu = new LoadingUsers();
+                        ArrayList<User> user_list = new ArrayList<User>();
                         try{
-                            dw.RemoveDWPoint(requestAction.getId());
+                            user_list = lu.UserSearch(requestAction.getString());
+                            responseObject.setUserList(user_list);
                             responseObject.setResponseStatus("OK");
                         }
                         catch(Exception e){
                             System.out.println(""+e);
                             responseObject.setResponseStatus("ERROR");
                         }
-                        dw = null;
                     }
                     finally
                     {
@@ -976,9 +999,27 @@ public class AsyncRequestProcessor implements Runnable {
                     }
                     break;
                 }
-                
+                case GeneralAction.LOADING_CLOSE_POINTS:
+              {
                     
-            }
+                    try
+                    {
+                        Points_sql p = new Points_sql();
+                        p.LoadingCloseActivePoints(requestAction.getLatitude(), requestAction.getLongitude(),responseObject);
+                        p = null;
+                    }
+                    finally
+                    {
+                  
+                        out.print(createServerResponse(responseObject));
+                    }
+                    break;
+              }   
+               
+               
+               default: break;
+                     
+           }
         }catch(IOException e)
 	{
 	       e.printStackTrace();

@@ -1,4 +1,3 @@
-
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -7,6 +6,8 @@ package doggizz.sql;
 
 import doggizz.classes.ActivePoints;
 import doggizz.classes.ParkCheckinTotal;
+import doggizz.classes.User;
+import doggizz.utils.GeneralAction;
 import doggizz.utils.Pool;
 import java.sql.*;
 import java.text.DateFormat;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import doggizz.classes.CloseUserPoint;
 
 /**
  *
@@ -24,6 +26,12 @@ public class Points_sql {
     
    public long UploadPoint(ActivePoints actPoint)
    {
+        //1 - checkin
+        //2 - inspector
+        //3 - lost
+        //4 - free report
+        //5 - dw
+       
        long id = 0;
         Connection con = null;
         CallableStatement cstmt = null;
@@ -195,6 +203,55 @@ public class Points_sql {
         return pointsList;
    }
    
+   //Mike
+   public void LoadingCloseActivePoints(Float latitude,Float longtitude,GeneralAction responseObject)
+   {
+        Connection con = null;
+        CallableStatement cstmt = null;
+        ResultSet rs = null;
+       // ArrayList<ActivePoints> pointsList = new ArrayList<ActivePoints>();
+        //ArrayList<User> userList = new ArrayList<User>();
+        ArrayList<CloseUserPoint> closeUserList = new ArrayList<CloseUserPoint>();
+        //ArrayList<Picture> picList = new ArrayList<Picture>();
+        try{
+            con = Pool.getConnection();
+            cstmt = con.prepareCall("{call sp_Load_Close_Points (?,?)}");
+            cstmt.setFloat(1, latitude);
+            cstmt.setFloat(2, longtitude);
+            rs = cstmt.executeQuery();
+            while(rs.next())
+            {
+              
+                CloseUserPoint closePoint = new CloseUserPoint();
+                closePoint.setId(rs.getLong(1));
+                closePoint.setUser_id(rs.getLong(2));
+                closePoint.setLatitude(rs.getDouble(3));
+                closePoint.setLongitude(rs.getDouble(4));
+                closePoint.setAction_id(rs.getInt(5));
+                closePoint.setOwner_name(rs.getString(6));
+                closePoint.setOwner_surname(rs.getString(7));
+              
+                closeUserList.add(closePoint);
+            }
+            
+           
+             responseObject.setCloseUserList(closeUserList);
+            responseObject.setResponseStatus("OK");
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(LoadingUsers.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            try { cstmt.close(); } catch (Exception e) { /* ignored */ }
+            try { con.close(); } catch (Exception e) { /* ignored */ }
+            try { rs.close(); } catch (Exception e) { /* ignored */ }
+        }
+       // return pointsList;
+       
+   }
+   
+   
+   
+   
     public static Calendar TimestampToCalendar(Timestamp date)
     { 
         DateFormat hours = new SimpleDateFormat( "HH" );
@@ -212,4 +269,3 @@ public class Points_sql {
         return cal;
     }
 }
-

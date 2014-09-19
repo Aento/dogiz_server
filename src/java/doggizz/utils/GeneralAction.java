@@ -1,4 +1,3 @@
-
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -90,6 +89,15 @@ public class GeneralAction {
     public static final int SENDING_DWPOINTS = 39;
     public static final int UPDATE_USER_NAME_PHONE = 40;
     public static final int LOADING_ALL_REPORTS = 42;
+    public static final int LOADING_NEW_BOARD_MESSAGES = 43;
+    public static final int LOADING_SEARCH_RESULT = 44;
+     /*
+    Load Active Ponts (Dog Walker,CheckIn,Officers)
+    Send:GeneralAction with Location Point.
+    
+    Receieve:"OK" and ActivePonts List in respondStatus wrapped in GeneralAction.
+    */
+    public static final int LOADING_CLOSE_POINTS = 45;
     
     private long id;
     private long id2;
@@ -123,6 +131,8 @@ public class GeneralAction {
     private ArrayList<User> userList;
     private ArrayList<TopBoardMessages> topBoardMessagesList;
     private ArrayList<BoardMessages> boardMessagesList;
+    //List to store close user in specific distance
+    private ArrayList<CloseUserPoint> closeUserList;
     
     public Long getId() {
         return id;
@@ -380,6 +390,15 @@ public class GeneralAction {
 
     public void setFavoriteList(ArrayList<FavoriteParks> favoriteList) {
         this.favoriteList = favoriteList;
+    }
+    
+    //Mike
+    public void setCloseUserList(ArrayList<CloseUserPoint> closeUserList) {
+        this.closeUserList = closeUserList;
+    }
+
+    public ArrayList<CloseUserPoint> getCloseUserList() {
+        return closeUserList;
     }
     
     /**
