@@ -92,10 +92,9 @@ public class GeneralAction {
     public static final int LOADING_NEW_BOARD_MESSAGES = 43;
     public static final int LOADING_SEARCH_RESULT = 44;
      /*
-    Load Active Ponts (Dog Walker,CheckIn,Officers)
+    Load closeUserList (Dog Walker,CheckIn,Officers)
     Send:GeneralAction with Location Point.
-    
-    Receieve:"OK" and ActivePonts List in respondStatus wrapped in GeneralAction.
+    Receieve:"OK" and closeUserList List in respondStatus wrapped in GeneralAction.
     */
     public static final int LOADING_CLOSE_POINTS = 45;
     
